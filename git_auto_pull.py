@@ -21,13 +21,15 @@ def is_git_repo(path):
         return False
 
 def print_usage():
-    print("Usage : auto_pull.py -b <branch_name>")
+    print("Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]")
     sys.exit()
 
 def main(argv):
     branch = ''
+    path = ''
+
     try:
-        opts, args = getopt.getopt(argv, "hb:", ["branch="])
+        opts, args = getopt.getopt(argv, "hb:p:", ["help=", "branch=", "path="])
     except getopt.GetoptError:
         print_usage()
 
@@ -37,9 +39,15 @@ def main(argv):
         for opt, arg in opts:
             if opt in ("-b", "--branch"):
                 branch = arg
-            else:
+                print("Branch is " + branch)
+            elif opt in ("-p", "--path"):
+                path = opt
+            elif opt in ("-h", "--help"):
                 print_usage()
-    print("Branch is " + branch)
+            else:
+                print("Unknown option: " + opt)
+                print_usage()
+
     current_path = os.getcwd()
     search(current_path)
 
