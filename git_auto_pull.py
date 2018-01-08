@@ -1,17 +1,8 @@
 import os
-import git
 import sys
 import getopt
-
-def search(dirname):
-    filenames = os.listdir(dirname)
-    for filename in filenames:
-        fullpath = os.path.join(dirname, filename)
-        if os.path.isdir(fullpath):
-            if (is_git_repo(fullpath)):
-                print(fullpath + " is git repo")
-            else:
-                search(fullpath)
+import git
+import subprocess
 
 def is_git_repo(path):
     try:
@@ -20,13 +11,33 @@ def is_git_repo(path):
     except git.exc.InvalidGitRepositoryError:
         return False
 
+
+def get_branch_name(path):
+    old_path = os.getcwd()
+    os.chdir(path)
+    active_branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    os.chdir(old_path)
+    return active_branch
+
 def print_usage():
     print("Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]")
     sys.exit()
 
+
+def search(dirname):
+    filenames = os.listdir(dirname)
+    for filename in filenames:
+        fullpath = os.path.join(dirname, filename)
+        if os.path.isdir(fullpath):
+            if (is_git_repo(fullpath)):
+                print(fullpath + " is git repo")
+                print(get_branch_name(fullpath))
+            else:
+                search(fullpath)
+
 def main(argv):
     branch = ''
-    path = ''
+    current_path = os.getcwd()
 
     try:
         opts, args = getopt.getopt(argv, "hb:p:", ["help=", "branch=", "path="])
@@ -39,7 +50,6 @@ def main(argv):
         for opt, arg in opts:
             if opt in ("-b", "--branch"):
                 branch = arg
-                print("Branch is " + branch)
             elif opt in ("-p", "--path"):
                 path = opt
             elif opt in ("-h", "--help"):
@@ -48,7 +58,6 @@ def main(argv):
                 print("Unknown option: " + opt)
                 print_usage()
 
-    current_path = os.getcwd()
     search(current_path)
 
 if __name__=="__main__":
