@@ -23,23 +23,26 @@ def print_usage():
     sys.exit()
 
 
-def git_cmd_checkout(repo_path, branch):
-    print(repo_path)
-    g = git.Git(repo_path)
-    g.init()
-    g.checkout(branch)
+def git_cmd_checkout(repo, branch):
+    print(repo)
+    try:
+        g = git.Git(repo)
+        g.init()
+        g.checkout(branch)
+    except git.exc.GitCommandError:
+        print("Fail")
 
 
-def exec_pull(path, branch):
-    current_branch = get_branch_name(path)
+def exec_pull(repo, branch):
+    current_branch = get_branch_name(repo)
     if not (current_branch == branch):
-        git_cmd_checkout(path, branch)
+        git_cmd_checkout(repo, branch)
 
 
-def run(dirname, branch):
-    filenames = os.listdir(dirname)
+def run(path, branch):
+    filenames = os.listdir(path)
     for filename in filenames:
-        fullpath = os.path.join(dirname, filename)
+        fullpath = os.path.join(path, filename)
         if os.path.isdir(fullpath):
             if (is_git_repo(fullpath)):
                 print(fullpath + " is git repo")
@@ -53,7 +56,7 @@ def run(dirname, branch):
 
 def main(argv):
     branch = ''
-    current_path = os.getcwd()
+    current_path = ''
 
     try:
         opts, args = getopt.getopt(argv, "hb:p:", ["help=", "branch=", "path="])
@@ -63,6 +66,7 @@ def main(argv):
     if len(argv) == 0:
         print_usage()
     else:
+        current_path = os.getcwd()
         for opt, arg in opts:
             if opt in ("-b", "--branch"):
                 branch = arg
