@@ -13,7 +13,6 @@ def is_git_repo(path):
 
 
 def get_branch_name(repo):
-#    active_branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
     active_branch = git.Repo(repo).active_branch.name
     print(active_branch)
     return active_branch.strip()
