@@ -23,20 +23,16 @@ def print_usage():
     sys.exit()
 
 
-def git_cmd_checkout(repo, branch):
-    print(repo)
-    try:
-        g = git.Git(repo)
-        g.init()
-        g.checkout(branch)
-    except git.exc.GitCommandError:
-        print("Fail")
-
-
 def exec_pull(repo, branch):
     current_branch = get_branch_name(repo)
+    g = git.cmd.Git(repo)
+    g.init()
     if not (current_branch == branch):
-        git_cmd_checkout(repo, branch)
+        try:
+            g.checkout(branch)
+        except git.exc.GitCommandError:
+            print("Fail")
+    g.pull()
 
 
 def run(path, branch):
