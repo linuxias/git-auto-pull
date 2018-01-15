@@ -11,12 +11,6 @@ def is_git_repo(path):
     except git.exc.InvalidGitRepositoryError:
         return False
 
-
-def print_usage():
-    print("Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]")
-    sys.exit()
-
-
 def exec_pull(repo, branch):
     g = git.cmd.Git(repo)
     g.init()
@@ -26,21 +20,29 @@ def exec_pull(repo, branch):
     except git.exc.GitCommandError:
         print("Fail")
 
-
 def run(path, branch):
     filenames = os.listdir(path)
     for filename in filenames:
         fullpath = os.path.join(path, filename)
         if os.path.isdir(fullpath):
             if (is_git_repo(fullpath)):
-                print(fullpath + " is git repo")
                 old_path = os.getcwd()
                 os.chdir(fullpath)
-                exec_pull(fullpath, branch)
+                print(fullpath + " is git repo")
+                if not (subprocess.call("git diff --quiet 2>/dev/null >&2", shell=True)):
+                    if (subprocess.call("git status | grep \'Your branch is ahead of\' > /dev/null", shell=True)):
+                        exec_pull(fullpath, branch)
+                    else:
+                        print("Your branch is ahead of \'origin\'" + branch)
+                else:
+                    print("Unstaged file is existed")
                 os.chdir(old_path)
             else:
-                search(fullpath)
+                run(fullpath, branch)
 
+def print_usage():
+    print("Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]")
+    sys.exit()
 
 def main(argv):
     branch = ''
