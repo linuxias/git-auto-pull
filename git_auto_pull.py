@@ -12,27 +12,19 @@ def is_git_repo(path):
         return False
 
 
-def get_branch_name(repo):
-    active_branch = git.Repo(repo).active_branch.name
-    print(active_branch)
-    return active_branch.strip()
-
-
 def print_usage():
     print("Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]")
     sys.exit()
 
 
 def exec_pull(repo, branch):
-    current_branch = get_branch_name(repo)
     g = git.cmd.Git(repo)
     g.init()
-    if not (current_branch == branch):
-        try:
-            g.checkout(branch)
-        except git.exc.GitCommandError:
-            print("Fail")
-    g.pull()
+    try:
+        g.checkout(branch)
+        g.pull()
+    except git.exc.GitCommandError:
+        print("Fail")
 
 
 def run(path, branch):
