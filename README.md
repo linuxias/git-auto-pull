@@ -1,5 +1,10 @@
 # Helper
 
-## git auto pull
-1. pre-requirement
- - gitpython : sudo apt-get install python-git
+### 1. git auto pull
+
+Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]
+
+example
+$ python git_auto_pull.py -b {your_branch}
+
+
