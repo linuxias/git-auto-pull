@@ -1,24 +1,15 @@
 import os
 import sys
 import getopt
-import git
 import subprocess
 
 def is_git_repo(path):
-    try:
-        _ = git.Repo(path).git_dir
-        return True
-    except git.exc.InvalidGitRepositoryError:
-        return False
+    return subprocess.call(['git', '-C', path, 'status'], stderr=subprocess.STDOUT, stdout = open(os.devnull, 'w')) == 0
 
 def exec_pull(repo, branch):
-    g = git.cmd.Git(repo)
-    g.init()
-    try:
-        g.checkout(branch)
-        g.pull()
-    except git.exc.GitCommandError:
-        print("Fail")
+    checkout_cmd = "git checkout " + branch
+    subprocess.call(checkout_cmd, shell=True);
+    subprocess.call("git pull > /dev/null", shell=True);
 
 def run(path, branch):
     filenames = os.listdir(path)
