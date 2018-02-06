@@ -1,12 +1,18 @@
-# Helper
+## Introduction
+It is a script to pull git repo from remote to local automatically.
 
-### 1. git auto pull
 
-Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]
+## Usage
+```
+ Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]
 
-example
+ optional arguments:
+ -b           Branch name to pull
+ -h --help    Print this message
+ -p --path    Path you want to pull
+```
+
+### example
+```
 $ python git_auto_pull.py -b {your_branch}
-
-### 2. tizen development tool (TBT)
-
-
+```
