@@ -52,7 +52,7 @@ def main(argv):
             if opt in ("-b", "--branch"):
                 branch = arg
             elif opt in ("-p", "--path"):
-                path = opt
+                current_path = opt
             elif opt in ("-h", "--help"):
                 print_usage()
             else:
