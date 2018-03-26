@@ -42,7 +42,7 @@ def main(argv):
     current_path = ''
 
     try:
-        opts, args = getopt.getopt(argv, "hb:p:", ["help=", "branch=", "path="])
+        opts, args = getopt.getopt(argv, "hb:p:", ["help", "branch=", "path="])
     except getopt.GetoptError:
         print_usage()
 
