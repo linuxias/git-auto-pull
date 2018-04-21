@@ -2,8 +2,17 @@
 
 import os
 import sys
-import getopt
 import subprocess
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Pulling for all of git-repositories from a specific directory recursively")
+
+    parser.add_argument("-b", "--branch", required=True, type=str, help="Branch name to pull")
+    parser.add_argument("-p", "--path", type=str, help="Path you want to start pulling")
+
+    args = parser.parse_args()
+    return args
 
 def is_git_repo(path):
     return subprocess.call(['git', '-C', path, 'status'], stderr=subprocess.STDOUT, stdout = open(os.devnull, 'w')) == 0
@@ -33,35 +42,16 @@ def run(path, branch):
             else:
                 run(fullpath, branch)
 
-def print_usage():
-    print("Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]")
-    sys.exit()
-
 def main(argv):
-    branch = ''
-    current_path = ''
+    args = parse_args()
 
-    try:
-        opts, args = getopt.getopt(argv, "hb:p:", ["help", "branch=", "path="])
-    except getopt.GetoptError:
-        print_usage()
+    branch = args.branch
+    start_path = os.getcwd()
 
-    if len(argv) == 0:
-        print_usage()
-    else:
-        current_path = os.getcwd()
-        for opt, arg in opts:
-            if opt in ("-b", "--branch"):
-                branch = arg
-            elif opt in ("-p", "--path"):
-                current_path = opt
-            elif opt in ("-h", "--help"):
-                print_usage()
-            else:
-                print("Unknown option: " + opt)
-                print_usage()
+    if args.path != None:
+        start_path = args.path
 
-    run(current_path, branch)
+    run(start_path, branch)
 
 if __name__=="__main__":
     main(sys.argv[1:])

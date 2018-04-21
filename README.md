@@ -1,15 +1,17 @@
 ## Introduction
-It is a script to pull git repo from remote to local automatically.
-
+It help to pulling for all of git-repositories from a specific directory recursively
 
 ## Usage
 ```
- Usage: auto_pull.py [-b <branch name>] [-h | --help] [-p | --path <path>]
+usage: git_auto_pull.py [-h] -b BRANCH [-p PATH]
 
- optional arguments:
- -b           Branch name to pull
- -h --help    Print this message
- -p --path    Path you want to pull
+Pulling for all of git-repositories from a specific directory recursively
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BRANCH, --branch BRANCH
+                        Branch name to pull
+  -p PATH, --path PATH  Path you want to start pulling
 ```
 
 ### example
